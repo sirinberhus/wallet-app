@@ -1,0 +1,66 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: php/Dockerfile
+    image: wallet-app
+    container_name: wallet-app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./src:/var/www/html
+    depends_on:
+      - pgsql
+      - redis
+    networks:
+      - wallet-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: wallet-nginx
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    volumes:
+      - ./src:/var/www/html
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+    networks:
+      - wallet-network
+
+  pgsql:
+    image: postgres:13
+    container_name: wallet-pgsql
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: wallet_app
+      POSTGRES_USER: wallet_user
+      POSTGRES_PASSWORD: admin!@123
+    volumes:
+      - wallet-pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - wallet-network
+
+  redis:
+    image: redis:alpine
+    container_name: wallet-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - wallet-redisdata:/data
+    networks:
+      - wallet-network
+
+volumes:
+  wallet-pgdata:
+  wallet-redisdata:
+
+networks:
+  wallet-network:
+    driver: bridge
+
+
