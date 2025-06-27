@@ -14,8 +14,8 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'web',
-        'passwords' => 'users',
+        'guard' => 'api',  //web to api
+        'passwords' => 'players', // users to players
     ],
 
     /*
@@ -40,6 +40,18 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        'api' => [                           
+            'driver' => 'jwt',
+            'provider' => 'players',
+        ],
+
+        'agent-api' => [
+            'driver' => 'jwt',
+            'provider' => 'agents',
+        ],
+
+
     ],
 
     /*
@@ -65,6 +77,16 @@ return [
             'model' => App\Models\User::class,
         ],
 
+        'players' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Player::class,
+        ],
+
+        'agents' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\BackofficeAgent::class,
+        ]
+
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',
@@ -89,6 +111,19 @@ return [
     'passwords' => [
         'users' => [
             'provider' => 'users',
+            'table' => 'password_resets',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+
+        'players' => [
+            'provider' => 'players',
+            'table'=> 'password_resets',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'agents' => [
+            'provider' => 'agents',
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,

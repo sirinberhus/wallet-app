@@ -2,18 +2,30 @@
 
 namespace App\Models;
 
+use Illuminate\Foundation\Auth\User as Authenticatable; //child of Model doesn't need add Eloquent\Model
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 use App\Models\PlayerBalance;
 use App\Models\Transaction;
 use App\Models\Promotion;
 
-class Player extends Model
+class Player extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable; // allows using factories and notification
 
     protected $fillable = ['username', 'email', 'password'];
     protected $hidden = ['password']; //it wont be visible when you fetch user data 
+
+    //JWT
+    public function getJWTIdentifier() { // unique identifier for the user that will be stored in JWT's sub claim.
+        return $this->getKey(); // it returns the model's primary key
+    }
+
+    public function getJWTCustomClaims() {
+        return [];
+    }
+
 
     //relationships
 

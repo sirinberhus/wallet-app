@@ -2,14 +2,16 @@
 
 namespace App\Models;
 
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 use App\Models\Promotion;
 use App\Models\Transaction;
 
-class BackofficeAgent extends Model
+class BackofficeAgent extends Authenticatable implements JWTSubject
 {
-    use HasFactory;
+    use HasFactory, Notifiable;
 
     protected $fillable = [
         'name', 'email' 'password', 'is_admin'
@@ -18,6 +20,15 @@ class BackofficeAgent extends Model
     protected $hidden = [
         'password'
     ];
+
+    //JWT
+    public function getJWTIdentifier() {
+        return $this->getKey();
+    }
+
+    public function getCustomClaims() {
+        return ['is_admin' => $this->is_admin];
+    }
 
     public function createdPromotions() {
         return $this->hasMany(Promotion::class, 'created_by');

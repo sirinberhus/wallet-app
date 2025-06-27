@@ -134,7 +134,7 @@ return [
     |
     */
 
-    'providers' => [
+    'providers' => [            //setup crew
 
         /*
          * Laravel Framework Service Providers...
@@ -174,6 +174,11 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+
+         /*
+         * Additional Service Providers...
+         */
+        Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
 
     ],
 
