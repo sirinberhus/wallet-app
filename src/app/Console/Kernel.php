@@ -3,10 +3,22 @@
 namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
+use App\Console\Commands\CreateBackofficeAdmin;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
 {
+
+    /**
+     * Register custom Artisan commands.
+     *
+     * @var array
+     */
+    protected $commands = [
+        CreateBackofficeAdmin::class,
+    ];
+    
+
     /**
      * Define the application's command schedule.
      *

@@ -13,11 +13,11 @@ class Transaction extends Model
     use HasFactory;
 
     protected $fillable = [
-        'type', 'amount', 'reference_id', 'promotion_reward_id', 'processed_by'
+        'player_id','type', 'amount', 'reference_id', 'promotion_reward_id', 'processed_by'
     ];
 
     protected $casts = [
-        'amount' = 'decimal:2'
+        'amount' => 'decimal:2'
     ];
 
     public function player () {

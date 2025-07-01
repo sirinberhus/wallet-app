@@ -21,7 +21,7 @@ class Promotion extends Model
         return $this->hasMany(PromotionReward::class);
     }
 
-    public function creator() {
+    public function players() {
         return $this->belongsToMany(Player::class, 'player_promotions')
         ->withPivot('claimed_at')
         ->withTimestamps();

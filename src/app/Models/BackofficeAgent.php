@@ -14,7 +14,7 @@ class BackofficeAgent extends Authenticatable implements JWTSubject
     use HasFactory, Notifiable;
 
     protected $fillable = [
-        'name', 'email' 'password', 'is_admin'
+        'name', 'email', 'password', 'is_admin'
     ];
 
     protected $hidden = [
@@ -26,7 +26,7 @@ class BackofficeAgent extends Authenticatable implements JWTSubject
         return $this->getKey();
     }
 
-    public function getCustomClaims() {
+    public function getJWTCustomClaims() {  // for include additional info-claim in the JWT token
         return ['is_admin' => $this->is_admin];
     }
 

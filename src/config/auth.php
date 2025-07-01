@@ -14,8 +14,8 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'api',  //web to api
-        'passwords' => 'players', // users to players
+        'guard' => 'api',  // changed web to api
+        'passwords' => 'players', // chagned users to players
     ],
 
     /*
@@ -35,10 +35,10 @@ return [
     |
     */
 
-    'guards' => [
+    'guards' => [  // guards defines how the user is authenticate()
         'web' => [
-            'driver' => 'session',
-            'provider' => 'users',
+            'driver' => 'session', //driver is the auth mechnanism for the guard
+            'provider' => 'users', // how to fetch user data
         ],
 
         'api' => [                           
@@ -46,9 +46,9 @@ return [
             'provider' => 'players',
         ],
 
-        'agent-api' => [
+        'bo-api' => [
             'driver' => 'jwt',
-            'provider' => 'agents',
+            'provider' => 'backoffice_agents',
         ],
 
 
@@ -82,7 +82,7 @@ return [
             'model' => App\Models\Player::class,
         ],
 
-        'agents' => [
+        'backoffice_agents' => [
             'driver' => 'eloquent',
             'model' => App\Models\BackofficeAgent::class,
         ]
@@ -119,13 +119,13 @@ return [
         'players' => [
             'provider' => 'players',
             'table'=> 'password_resets',
-            'expire' => 60,
-            'throttle' => 60,
+            'expire' => 10080,
+            'throttle' => 60, //wait time before sending another reset mail
         ],
-        'agents' => [
-            'provider' => 'agents',
+        'backoffice_agents' => [
+            'provider' => 'backoffice_agents',
             'table' => 'password_resets',
-            'expire' => 60,
+            'expire' => 10080,
             'throttle' => 60,
         ],
     ],

@@ -20,7 +20,7 @@ class CreatePromotionsTable extends Migration
             $table->text('description')->nullable();
             $table->boolean('is_active')->default(true);
             $table->dateTime('valid_from');
-            $table->dataTime('valid_to');
+            $table->dateTime('valid_to');
             $table->foreignId('created_by')->constrained('backoffice_agents');
             $table->timestamps();
         });

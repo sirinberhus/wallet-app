@@ -21,7 +21,7 @@ class CreateTransactionsTable extends Migration
             $table->enum('type', ['DEPOSIT', 'WITHDRAWAL', 'PROMOTION', 'ADJUSTMENT']);
             $table->decimal('amount', 15, 2);
             $table->string('reference_id')->unique();
-            $table->foreginId('promotion_reward_id')->nullable()->constrained();
+            $table->foreignId('promotion_reward_id')->nullable()->constrained();
             $table->foreignId('processed_by')
             ->nullable()
             ->constrained('backoffice_agents');

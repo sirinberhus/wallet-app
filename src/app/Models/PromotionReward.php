@@ -12,7 +12,7 @@ class PromotionReward extends Model
     use HasFactory;
 
     protected $fillable = [
-        'type', 'amount', 'currency'
+        'promotion_id','type', 'amount', 'currency'
     ];
 
     protected $casts = [
