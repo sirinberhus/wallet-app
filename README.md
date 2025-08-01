@@ -70,12 +70,7 @@ Use Docker Compose to build the images and start the services.
 
 Access the PHP container and run the necessary commands.
 
-      `docker-compose exec app bash
-composer install
-php artisan migrate
-php artisan key:generate
-php artisan jwt:secret
-exit`
+<pre><code>```bash docker-compose exec app bash composer install php artisan migrate php artisan key:generate php artisan jwt:secret exit ```</code></pre>
 
 
 **5. Create a Backoffice Admin User**
