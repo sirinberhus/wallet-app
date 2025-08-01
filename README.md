@@ -47,14 +47,17 @@ Follow these steps to get your development environment up and running.
 
 **1. Clone the Repository**
 
-      `git clone https://github.com/sirinberhus/wallet-app.git
-cd wallet-app`
+```bash
+git clone https://github.com/sirinberhus/wallet-app.git
+```
 
 **2. Set Up Environment Variables**
 
 Copy the example environment file and generate your application key.
 
-      `cp .env.example .env`
+```bash
+cp .env.example .env
+```
 
 Now, open the .env file and configure your database credentials and other settings.
 
@@ -62,22 +65,28 @@ Now, open the .env file and configure your database credentials and other settin
 
 Use Docker Compose to build the images and start the services.
 
-
-      `docker-compose up -d --build`
+```bash
+docker-compose up -d --build
+```
 
 
 **4. Install Dependencies and Run Migrations**
 
 Access the PHP container and run the necessary commands.
 
-<pre><code>```bash docker-compose exec app bash composer install php artisan migrate php artisan key:generate php artisan jwt:secret exit ```</code></pre>
+```bash
+docker-compose exec app bash -c "composer install && php artisan migrate && php artisan key:generate && php artisan jwt:secret"
+```
+
 
 
 **5. Create a Backoffice Admin User**
 
 A custom Artisan command is available to create a Backoffice Agent.
 
-      `docker-compose exec app php artisan backoffice:create-admin`
+```bash
+docker-compose exec app php artisan backoffice:create-admin
+```
 
 
 Your application should now be accessible at http://localhost:8080 (or the port you configured).
@@ -132,4 +141,4 @@ This project is set up with a basic CI/CD pipeline using [GitHub Actions/GitLab 
 3. **Building Docker Image**: Creates a production-ready Docker image.
 4. **Deployment**: Pushes the image to a container registry and deploys to the staging/production environment.
 
-You can find the pipeline configuration in the .github/workflows/ .
+You can find the pipeline configuration in the .github/workflows/
