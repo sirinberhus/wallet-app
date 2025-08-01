@@ -41,7 +41,7 @@ class Player extends Authenticatable implements JWTSubject
     }
 
     public function promotions() {
-        return $this->belongsToMany(Promotion::class, 'player_promotions')  //many to many 
+        return $this->belongsToMany(Promotion::class, 'player_promotions')  //many to many  
         ->withPivot('claimed_at')
         ->withTimestamps();
     }
