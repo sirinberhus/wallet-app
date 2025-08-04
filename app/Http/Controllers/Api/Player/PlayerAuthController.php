@@ -2,25 +2,25 @@
 
 namespace App\Http\Controllers\Api\Player;
 
-use App\Models\Player;
-use App\Http\Requests\PlayerRegistrationRequest;
-use App\Http\Requests\PlayerLoginRequest;
-use Illuminate\Support\Facades\Auth;
-use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PlayerLoginRequest;
+use App\Http\Requests\PlayerRegistrationRequest;
+use App\Models\Player;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class PlayerAuthController extends Controller
 {
+    public function __construct()
+    {
 
-    public function __construct(){
-
-        $this->middleware('auth:api', ['except'=> ['login', 'register']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register']]);
     }
 
-    public function register(PlayerRegistrationRequest $request) {
-        
+    public function register(PlayerRegistrationRequest $request)
+    {
+
         $validatedData = $request->validated();
 
         $player = Player::create([
@@ -39,7 +39,8 @@ class PlayerAuthController extends Controller
         ], 201); // 201 means created
     }
 
-    public function login(PlayerLoginRequest $request) {
+    public function login(PlayerLoginRequest $request)
+    {
 
         $validatedData = $request->validated();
 
@@ -48,7 +49,7 @@ class PlayerAuthController extends Controller
             'password' => $validatedData['password'],
         ];
 
-        if(! $token = Auth::guard('api')->attempt($credentials)) {
+        if (! $token = Auth::guard('api')->attempt($credentials)) {
             return response()->json([
                 'error' => 'Unauthorized: Invalid credentials'
             ], 401); // 401 means credentials are missing or wrong - Unauthorized

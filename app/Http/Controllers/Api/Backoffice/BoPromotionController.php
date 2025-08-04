@@ -2,62 +2,61 @@
 
 namespace App\Http\Controllers\Api\Backoffice;
 
-use Exception;
-use App\Models\Player;
-use App\Models\Promotion;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ChangeStatusRequest;
 use App\Http\Requests\CreatePromotionRequest;
 use App\Http\Resources\PromotionResource;
-use Illuminate\Support\Facades\Cache;
+use App\Models\Promotion;
 use App\Services\PromotionService;
-
-
+use Exception;
+use Illuminate\Support\Facades\Cache;
 
 class BoPromotionController extends Controller
 {
-    public function getPromotions() {
+    public function getPromotions()
+    {
 
         $promotions = Promotion::with('rewards')->paginate(10);
         return PromotionResource::collection($promotions);
     }
 
-    public function createPromotion(CreatePromotionRequest $request, PromotionService $promotionService) {
+    public function createPromotion(CreatePromotionRequest $request, PromotionService $promotionService)
+    {
 
         $validatedData = $request->validated();
-       
-        try{
-            
+
+        try {
+
             $promotion = $promotionService->create($validatedData);
 
             return response()->json([
                 'message' => 'Promotion and rewards created successfully',
                 'promotion' => $promotion->load('rewards') // load rewards relationship
             ]);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             return response()->json([
                 'error' => 'Failed to create promotion',
                 'details' => $e->getMessage(),
-            ],500); //internal server error
+            ], 500); //internal server error
         }
 
     }
 
-    public function deletePromotion($id) {
+    public function deletePromotion($id)
+    {
 
         $promotion = Promotion::find($id);
 
-        if(!$promotion) {
+        if (!$promotion) {
             return response([
                 'error' => 'Promotion Not Found!',
-            ],404);
+            ], 404);
         }
 
         $claimedPromotion = $promotion->players()->exists();
         $usedInTransactions = $promotion->rewards()->whereHas('transactions')->exists();
 
-        if($claimedPromotion || $usedInTransactions) {
+        if ($claimedPromotion || $usedInTransactions) {
             return response()->json([
                 'error' => 'Promotion has been claimed by players or used in transactions and can not be deleted',
             ]);
@@ -78,14 +77,15 @@ class BoPromotionController extends Controller
         }
     }
 
-    public function changeStatus(ChangeStatusRequest $request, $id) {
+    public function changeStatus(ChangeStatusRequest $request, $id)
+    {
 
         $promotion = Promotion::find($id);
 
-        if(!$promotion) {
+        if (!$promotion) {
             return response()->json([
                 'error' => 'promotion not found'
-            ],404);
+            ], 404);
         }
 
         $validatedData = $request->validated();
@@ -104,7 +104,7 @@ class BoPromotionController extends Controller
                 'is_active' => $promotion->is_active
             ]
         ]);
-        
+
     }
 
-} 
+}

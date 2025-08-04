@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Player;
 
 class PlayerBalance extends Model
 {
@@ -12,7 +11,8 @@ class PlayerBalance extends Model
 
     protected $fillable = ['balance'];
 
-    public function player() {
+    public function player()
+    {
         return $this->belongsTo(Player::class);
     }
 }

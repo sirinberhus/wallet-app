@@ -1,17 +1,15 @@
 <?php
 
+use App\Http\Controllers\Api\Backoffice\BoAuthController;
+// Player
+use App\Http\Controllers\Api\Backoffice\BoPromotionController;
+use App\Http\Controllers\Api\Backoffice\BoUserController;
+// Backoffice Agent
+use App\Http\Controllers\Api\Player\PlayerAuthController;
+use App\Http\Controllers\Api\Player\PlayerController;
+use App\Http\Controllers\Api\Player\PlayerPromotionController;
 use Illuminate\Support\Facades\Route;
 
-// Player
-use App\Http\Controllers\Api\Player\PlayerController;
-use App\Http\Controllers\Api\Backoffice\UserController;
-use App\Http\Controllers\Api\Backoffice\BoAuthController;
-
-// Backoffice Agent
-use App\Http\Controllers\Api\Backoffice\BoUserController;
-use App\Http\Controllers\Api\Player\PlayerAuthController;
-use App\Http\Controllers\Api\Backoffice\BoPromotionController;
-use App\Http\Controllers\Api\Player\PlayerPromotionController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -23,24 +21,24 @@ use App\Http\Controllers\Api\Player\PlayerPromotionController;
 |
 */
 
- // PLAYER Routes
-
-    
-    Route::post('/register', [PlayerAuthController::class, 'register']);
-    Route::post('/login', [PlayerAuthController::class, 'login']);
-
-    Route::middleware('auth:api')->group(function () {
-        Route::get('/me', [PlayerController::class, 'viewProfile']);
-        Route::get('/balance', [PlayerController::class, 'viewBalance']);
-
-        Route::get('/promotions', [PlayerPromotionController::class, 'promotions']);
-        Route::post('/promotions/claim', [PlayerPromotionController::class, 'claimPromotion']);
-    });
+// PLAYER Routes
 
 
-// BACKOFFICE Routes 
+Route::post('/register', [PlayerAuthController::class, 'register']);
+Route::post('/login', [PlayerAuthController::class, 'login']);
+
+Route::middleware('auth:api')->group(function () {
+    Route::get('/me', [PlayerController::class, 'viewProfile']);
+    Route::get('/balance', [PlayerController::class, 'viewBalance']);
+
+    Route::get('/promotions', [PlayerPromotionController::class, 'promotions']);
+    Route::post('/promotions/claim', [PlayerPromotionController::class, 'claimPromotion']);
+});
+
+
+// BACKOFFICE Routes
 Route::prefix('bo')->group(function () {
-    
+
     Route::post('/login', [BoAuthController::class, 'login']);
 
     Route::middleware('auth:bo-api')->group(function () {

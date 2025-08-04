@@ -5,14 +5,12 @@ namespace App\Services;
 use App\Models\Player;
 use App\Models\Promotion;
 use App\Models\Transaction;
-use Illuminate\Contracts\Support\ValidatedData;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
 
-class PromotionService 
+class PromotionService
 {
-
     /**
      * @param Player $player The player who claiming the promotion.
      * @param Promotion $promotion The promotion being claimed.
@@ -26,7 +24,7 @@ class PromotionService
             $totalReward = 0;
             $transactionReferences = [];
 
-            foreach($promotion->rewards as $reward) {
+            foreach ($promotion->rewards as $reward) {
                 $amount = $reward->amount;
 
                 $balance = $player->balance; //get relationship from the $player model
@@ -45,7 +43,7 @@ class PromotionService
                 ]);
 
                 $transactionReferences[] = $referenceId;
-                $totalReward += $amount;   
+                $totalReward += $amount;
             }
 
             // finally, return the data we need from within the transaction
@@ -53,7 +51,7 @@ class PromotionService
                 'total_reward' => $totalReward,
                 'transaction_references' => $transactionReferences
             ];
-        }); 
+        });
 
         $balanceCachKey = 'player:'.$player->id.':balance';
         Cache::forget($balanceCachKey);
@@ -80,7 +78,7 @@ class PromotionService
                 'created_by' => Auth::guard('bo-api')->id(), // promotion creator who is creating this promotion
             ]);
 
-            if(isset($validatedData['rewards'])) {
+            if (isset($validatedData['rewards'])) {
                 foreach ($validatedData['rewards'] as $rewardData) {
                     $promotion->rewards()->create($rewardData);
                 }

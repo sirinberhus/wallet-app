@@ -4,8 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\PromotionReward;
-use App\Models\Player;
 
 class Promotion extends Model
 {
@@ -17,11 +15,13 @@ class Promotion extends Model
 
     protected $dates = ['valid_from', 'valid_to'];
 
-    public function rewards() {
+    public function rewards()
+    {
         return $this->hasMany(PromotionReward::class);
     }
 
-    public function players() {
+    public function players()
+    {
         return $this->belongsToMany(Player::class, 'player_promotions')
         ->withPivot('claimed_at')
         ->withTimestamps();

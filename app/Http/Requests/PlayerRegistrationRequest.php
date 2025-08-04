@@ -23,7 +23,7 @@ class PlayerRegistrationRequest extends FormRequest
      */
     public function rules()
     {
-        
+
         return [
             'username' => 'required|string|unique:players',
             'email' => 'required|email|unique:players', //check the players table

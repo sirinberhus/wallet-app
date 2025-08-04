@@ -2,28 +2,30 @@
 
 namespace App\Http\Controllers\Api\Backoffice;
 
+use App\Http\Controllers\Controller;
 use App\Models\Player;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 
 class BoUserController extends Controller
 {
-    public function getUsers(Request $request) {
-        
+    public function getUsers(Request $request)
+    {
+
         $perPage = $request->get('per_page', 15);
         $users = Player::paginate($perPage);
 
         return response()->json($users);
     }
 
-    public function getTransactions(Player $player) {
+    public function getTransactions(Player $player)
+    {
 
         $player = Player::with(['transactions.reward'])->find($player->id);
 
-        if(!$player) {
+        if (!$player) {
             return response()->json([
                 'error' => 'Player not found'
-            ],404);
+            ], 404);
         }
 
         return response()->json([
@@ -41,5 +43,5 @@ class BoUserController extends Controller
                 ];
             })
         ]);
-    } 
+    }
 }

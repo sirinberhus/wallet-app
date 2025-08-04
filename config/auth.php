@@ -41,7 +41,7 @@ return [
             'provider' => 'users', // how to fetch user data
         ],
 
-        'api' => [                           
+        'api' => [
             'driver' => 'jwt',
             'provider' => 'players',
         ],
@@ -118,7 +118,7 @@ return [
 
         'players' => [
             'provider' => 'players',
-            'table'=> 'password_resets',
+            'table' => 'password_resets',
             'expire' => 10080,
             'throttle' => 60, //wait time before sending another reset mail
         ],

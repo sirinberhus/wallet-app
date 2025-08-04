@@ -48,17 +48,17 @@ class CreateBackOfficeAdmin extends Command
 
         $passwordConfirm = $this->secret('Confirm the password');
 
-        if($password !== $passwordConfirm) {
+        if ($password !== $passwordConfirm) {
             $this->error('Passwords do not match');
             return;
         }
 
-        if(strlen($password) < 8) {
+        if (strlen($password) < 8) {
             $this->error('Password must be at least 8 characters!');
             return;
         }
 
-        if(BackofficeAgent::where('email', $email)->exists()) {
+        if (BackofficeAgent::where('email', $email)->exists()) {
             $this->error('This email is already registered!');
             return;
         }
