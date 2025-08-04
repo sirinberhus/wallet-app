@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Api\Player;
 
 use App\Models\Player;
-use Illuminate\Http\Request;
+use App\Http\Requests\PlayerRegistrationRequest;
+use App\Http\Requests\PlayerLoginRequest;
 use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Http\Controllers\Controller;
@@ -18,22 +19,14 @@ class PlayerAuthController extends Controller
         $this->middleware('auth:api', ['except'=> ['login', 'register']]);
     }
 
-    public function register(Request $request) {
+    public function register(PlayerRegistrationRequest $request) {
         
-        $validator = Validator::make($request->all(), [
-            'username' => 'required|string|unique:players',
-            'email' => 'required|email|unique:players', //check the players table
-            'password' => 'required|string|min:6',
-        ]);
-
-        if($validator->fails()) {
-            return response()->json($validator->errors(), 422); // 422 means the server understands the request, but the input data is invalid
-        }
+        $validatedData = $request->validated();
 
         $player = Player::create([
-            'username' => $request->username,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'username' => $validatedData['username'],
+            'email' => $validatedData['email'],
+            'password' => Hash::make($validatedData['password']),
         ]);
 
         $token = JWTAuth::fromUser($player);
@@ -46,20 +39,16 @@ class PlayerAuthController extends Controller
         ], 201); // 201 means created
     }
 
-    public function login(Request $request) {
+    public function login(PlayerLoginRequest $request) {
 
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email', 
-            'password' => 'required|string|min:6',
-        ]);
+        $validatedData = $request->validated();
 
-        if($validator->fails()) {
-            return response()->json($validator->errors(), 422);
-        }
+        $credentials = [
+            'email' => $validatedData['email'],
+            'password' => $validatedData['password'],
+        ];
 
-        $credantials = $request->only('email', 'password');
-
-        if(! $token = Auth::guard('api')->attempt($credantials)) {
+        if(! $token = Auth::guard('api')->attempt($credentials)) {
             return response()->json([
                 'error' => 'Unauthorized: Invalid credentials'
             ], 401); // 401 means credentials are missing or wrong - Unauthorized

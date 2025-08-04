@@ -10,9 +10,6 @@ class PlayerBalance extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'player_id';
-    public $incrementing = false; // For avoid auto-increment
-
     protected $fillable = ['balance'];
 
     public function player() {

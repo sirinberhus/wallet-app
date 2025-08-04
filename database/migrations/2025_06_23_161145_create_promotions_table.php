@@ -18,7 +18,7 @@ class CreatePromotionsTable extends Migration
             $table->string('code')->unique();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->boolean('is_active')->default(true);
+            $table->boolean('is_active')->default(false);
             $table->dateTime('valid_from');
             $table->dateTime('valid_to');
             $table->foreignId('created_by')->constrained('backoffice_agents');

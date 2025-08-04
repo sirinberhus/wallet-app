@@ -14,13 +14,13 @@ class CreatePlayerBalancesTable extends Migration
     public function up()
     {
         Schema::create('player_balances', function (Blueprint $table) {
+            $table->id();
             $table->foreignId('player_id')
             ->constrained('players', 'id')
-            ->cascadeOnDelete();
+            ->cascadeOnDelete()
+            ->unique();
             $table->decimal('balance', 15, 2)->default(0);
             $table->timestamps();
-
-            $table->primary('player_id'); //one to one relationship
         });
     }
 
