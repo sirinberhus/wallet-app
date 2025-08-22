@@ -8,6 +8,7 @@ use App\Http\Resources\PromotionResource;
 use App\Models\Promotion;
 use App\Services\PromotionService;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
@@ -22,8 +23,9 @@ class PlayerPromotionController extends Controller
         $ttl = 600;
 
         $promotions = Cache::remember($cacheKey, $ttl, function () {
-            return Promotion::with('rewards')->where('is_active', 'true')->get();
+            return Promotion::with('rewards')->where('is_active', true)->get();
         });
+        
 
         return PromotionResource::collection($promotions);
     }
@@ -32,8 +34,6 @@ class PlayerPromotionController extends Controller
 
     public function claimPromotion(ClaimPromotionRequest $request, PromotionService $promotionService)
     {
-
-        //Ensure the claim request has valid promotion code (created by bo)
         $validatedData = $request->validated();
 
         /**
@@ -41,29 +41,18 @@ class PlayerPromotionController extends Controller
          * */
         $player = Auth::user();
 
-        // SELECT * FROM promotions WHERE code = '$request->promotion_code'
-        //get the ->first() result (if find)
         $promotion = Promotion::where('code', $validatedData['promotion_code'])->first();
 
-        if (! $promotion->is_active) {
-            return response([
-                'message' => 'This promotion is no longer active :(',
-
-            ], 400);
+        if(! $promotion) {
+            return response(['message' => 'Promotion not found',], 404);
         }
 
-        //check if the user has already this promotion
-        if ($player->promotions()
-        ->where('promotion_id', $promotion->id)
-        ->exists()) {
-            return response()->json([
-                'message' => 'You have already claimed this promotion'
-                ], 400);
-
+        if (! $promotion->is_active) {
+            return response(['message' => 'This promotion is no longer active :('], 400);
         }
 
         try {
-
+            
             $result = $promotionService->claim($player, $promotion); //dependency injection
 
             return response()->json([
@@ -77,10 +66,9 @@ class PlayerPromotionController extends Controller
 
             return response()->json([
                 'error' => 'An unexpected error occured while claiming the promotion.',
-                'details' => $e->getMessage()
-            ]);
+                'details' => $e->getMessage(),
+            ], 500);
         }
-
     }
 
 }

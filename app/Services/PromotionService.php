@@ -19,32 +19,46 @@ class PromotionService
     public function claim(Player $player, Promotion $promotion): array
     {
         $resultData = DB::transaction(function () use ($player, $promotion) {
+            $alreadyClaimed = $player->promotions()
+            ->where('promotion_id', $promotion->id)
+            ->lockForUpdate()
+            ->exists();
+
+            if($alreadyClaimed) {
+                throw new \RuntimeException('Promotion Already Claimed!');
+            }
+
             $player->promotions()->attach($promotion->id, ['claimed_at' => now()]);
 
             $totalReward = 0;
+            $transactionsToInsert = [];
             $transactionReferences = [];
 
             foreach ($promotion->rewards as $reward) {
+
                 $amount = $reward->amount;
 
                 $balance = $player->balance; //get relationship from the $player model
                 $balance->balance += $amount; // $balance is an object of PlayerBalance
-                $balance->save();
 
                 $referenceId = 'player_'.$player->id.'_promo_'.$promotion->id.'_reward_'.$reward->id;
+                $transactionReferences[] = $referenceId;
 
-                Transaction::create([
+                $transactionsToInsert[] = [
                     'player_id' => $player->id,
                     'type' => 'PROMOTION',
                     'amount' => $amount,
                     'reference_id' => $referenceId,
                     'promotion_reward_id' => $reward->id,
                     'processed_by' => null
-                ]);
-
-                $transactionReferences[] = $referenceId;
+                ];
+                
                 $totalReward += $amount;
             }
+
+            $balance->save();
+
+            Transaction::insert($transactionsToInsert);
 
             // finally, return the data we need from within the transaction
             return [

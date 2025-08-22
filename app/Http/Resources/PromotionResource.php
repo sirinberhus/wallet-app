@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Log; 
 
 class PromotionResource extends JsonResource
 {
@@ -14,6 +15,7 @@ class PromotionResource extends JsonResource
      */
     public function toArray($request): array
     {
+
         return [
             'id' => $this->id,
             'code' => $this->code,
@@ -22,7 +24,7 @@ class PromotionResource extends JsonResource
             'isActive' => $this->is_active,
             'validFrom' => $this->valid_from,
             'validTo' => $this->valid_to,
-            'rewards' => RewardResource::collection($this->rewards)
+            'rewards' => RewardResource::collection($this->whenloaded('rewards')),
         ];
     }
 }

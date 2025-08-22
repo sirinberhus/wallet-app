@@ -1,10 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\Backoffice\BoAuthController;
-// Player
 use App\Http\Controllers\Api\Backoffice\BoPromotionController;
 use App\Http\Controllers\Api\Backoffice\BoUserController;
-// Backoffice Agent
 use App\Http\Controllers\Api\Player\PlayerAuthController;
 use App\Http\Controllers\Api\Player\PlayerController;
 use App\Http\Controllers\Api\Player\PlayerPromotionController;
@@ -21,9 +19,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
 // PLAYER Routes
-
-
 Route::post('/register', [PlayerAuthController::class, 'register']);
 Route::post('/login', [PlayerAuthController::class, 'login']);
 
